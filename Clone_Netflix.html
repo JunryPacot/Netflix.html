@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #000;
+        }
+
+        header .logo h1 {
+            color: red;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li {
+            cursor: pointer;
+        }
+
+        #banner {
+            background-image: url('https://image.tmdb.org/t/p/original/your_banner_image_path.jpg');
+            background-size: cover;
+            height: 60vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .banner-content {
+            margin-left: 50px;
+        }
+
+        .banner-content h2 {
+            font-size: 3rem;
+        }
+
+        #movie-lists {
+            padding: 20px;
+        }
+
+        .movie-row {
+            display: flex;
+            gap: 10px;
+            overflow-x: scroll;
+        }
+
+        .movie-row img {
+            width: 200px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>MyFlix</h1>
+        </div>
+        <nav>
+            <ul>
+                <li>Home</li>
+                <li>TV Shows</li>
+                <li>Movies</li>
+                <li>New & Popular</li>
+                <li>My List</li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="banner">
+        <div class="banner-content">
+            <h2 id="featured-title">Featured Movie Title</h2>
+            <p id="featured-description">Movie description will go here...</p>
+            <button id="play-button">Play</button>
+            <button id="info-button">More Info</button>
+        </div>
+    </section>
+
+    <section id="movie-lists">
+        <h2>Popular Movies</h2>
+        <div class="movie-row" id="popular-movies"></div>
+
+        <h2>Top Rated</h2>
+        <div class="movie-row" id="top-rated-movies"></div>
+    </section>
+
+    <script>
+        const API_KEY = 'YOUR_API_KEY';
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMG_URL = 'https://image.tmdb.org/t/p/w500';
+
+        async function fetchMovies(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results;
+        }
+
+        async function displayPopularMovies() {
+            const movies = await fetchMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+            const popularMoviesContainer = document.getElementById('popular-movies');
+            popularMoviesContainer.innerHTML = movies.map(movie => `
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+            `).join('');
+        }
+
+        async function displayTopRatedMovies() {
+            const movies = await fetchMovies(`${BASE_URL}/movie/top_rated?api_key=${API_KEY}`);
+            const topRatedMoviesContainer = document.getElementById('top-rated-movies');
+            topRatedMoviesContainer.innerHTML = movies.map(movie => `
+                <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
+            `).join('');
+        }
+
+        function init() {
+            displayPopularMovies();
+            displayTopRatedMovies();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
